@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KS Test Performance Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+    <style>
+        .plot-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+        .metric-card {
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .suspicious-table {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid py-4">
+        <h1 class="text-center mb-4">KS Test Performance Analysis Dashboard</h1>
+        
+        <!-- Performance Metrics Summary -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card bg-primary text-white">
+                    <h5>Accuracy</h5>
+                    <h2 id="accuracy">-</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card bg-success text-white">
+                    <h5>Precision</h5>
+                    <h2 id="precision">-</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card bg-info text-white">
+                    <h5>Recall</h5>
+                    <h2 id="recall">-</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card bg-warning text-dark">
+                    <h5>F1 Score</h5>
+                    <h2 id="f1_score">-</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alpha Analysis -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="plot-container">
+                    <h4>ROC Curve</h4>
+                    <div id="roc_curve"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="plot-container">
+                    <h4>Precision-Recall Curve</h4>
+                    <div id="pr_curve"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="plot-container">
+                    <h4>Alpha Impact Analysis</h4>
+                    <div id="alpha_impact"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suspicious Connections -->
+        <div class="row">
+            <div class="col-12">
+                <div class="suspicious-table">
+                    <h4>Suspicious Connections</h4>
+                    <div id="suspicious_table"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update metrics cards
+        function updateMetrics(metrics) {
+            document.getElementById('accuracy').textContent = (metrics.accuracy * 100).toFixed(2) + '%';
+            document.getElementById('precision').textContent = (metrics.precision * 100).toFixed(2) + '%';
+            document.getElementById('recall').textContent = (metrics.recall * 100).toFixed(2) + '%';
+            document.getElementById('f1_score').textContent = (metrics.f1_score * 100).toFixed(2) + '%';
+        }
+
+        // Function to plot ROC curve
+        function plotROC(fpr, tpr, auc) {
+            const trace = {
+                x: fpr,
+                y: tpr,
+                mode: 'lines',
+                name: `ROC curve (AUC = ${auc.toFixed(2)})`
+            };
+
+            const layout = {
+                title: 'Receiver Operating Characteristic (ROC) Curve',
+                xaxis: { title: 'False Positive Rate' },
+                yaxis: { title: 'True Positive Rate' }
+            };
+
+            Plotly.newPlot('roc_curve', [trace], layout);
+        }
+
+        // Function to plot Precision-Recall curve
+        function plotPR(precision, recall, ap) {
+            const trace = {
+                x: recall,
+                y: precision,
+                mode: 'lines',
+                name: `PR curve (AP = ${ap.toFixed(2)})`
+            };
+
+            const layout = {
+                title: 'Precision-Recall Curve',
+                xaxis: { title: 'Recall' },
+                yaxis: { title: 'Precision' }
+            };
+
+            Plotly.newPlot('pr_curve', [trace], layout);
+        }
+
+        // Function to plot Alpha Impact
+        function plotAlphaImpact(alphaResults) {
+            const alphas = Object.keys(alphaResults);
+            const metrics = ['accuracy', 'precision', 'recall', 'f1_score', 'fpr'];
+            const traces = metrics.map(metric => ({
+                x: alphas,
+                y: alphas.map(a => alphaResults[a][metric]),
+                mode: 'lines+markers',
+                name: metric.replace('_', ' ').toUpperCase()
+            }));
+
+            const layout = {
+                title: 'Impact of Alpha on Performance Metrics',
+                xaxis: { title: 'Alpha Value' },
+                yaxis: { title: 'Score' }
+            };
+
+            Plotly.newPlot('alpha_impact', traces, layout);
+        }
+
+        // Initialize suspicious connections table
+        const grid = new gridjs.Grid({
+            columns: [
+                { name: 'Connection ID', sort: true },
+                { name: 'Source IP', sort: true },
+                { name: 'Destination IP', sort: true },
+                { name: 'Protocol', sort: true },
+                { name: 'Confidence', sort: true },
+                { name: 'Status', sort: true }
+            ],
+            pagination: { limit: 10 },
+            search: true,
+            sort: true,
+            style: { 
+                table: { 'width': '100%' }
+            }
+        }).render(document.getElementById('suspicious_table'));
+
+        // WebSocket connection for real-time updates
+        const ws = new WebSocket(`ws://${window.location.host}/ws/performance`);
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            
+            if (data.type === 'metrics') {
+                updateMetrics(data.metrics);
+            } else if (data.type === 'roc') {
+                plotROC(data.fpr, data.tpr, data.auc);
+            } else if (data.type === 'pr') {
+                plotPR(data.precision, data.recall, data.ap);
+            } else if (data.type === 'alpha') {
+                plotAlphaImpact(data.results);
+            } else if (data.type === 'suspicious') {
+                grid.updateConfig({
+                    data: data.connections
+                }).forceRender();
+            }
+        };
+    </script>
+</body>
+</html>

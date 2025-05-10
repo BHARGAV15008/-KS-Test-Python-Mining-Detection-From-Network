@@ -1,0 +1,195 @@
+Provides me a new version of codes according below codes of conduct and as per above reference codes:
+"
+6. Sample Output & Analysis
+{
+  "timestamp": ,
+  "window_size": ,
+  "mining_stat": ,
+  "nonmining_stat": ,
+  "confidence": ,
+  "threshold": ,
+  "verdict": ,
+  "network_metrics": {
+    "packet_rate": ,
+    "latency": ,
+    "jitter": ,
+  }
+}
+
+Detection Timeline:
+
+Time          │ Confidence │ State           │ Action
+──────────────┼────────────┼─────────────────┼──────────────
+
+also  add which protocols use;
+
+after all the connection description generates new report based on performance metrcis of entire networks 
+
+
+7. Advanced Usage
+
+Live Monitoring Dashboard:
+python main.py --dashboard --port 8080
+
+Accessible at http://localhost:8080 with real-time metrics:
+
+    CDF comparison visualization
+
+    Network throughput graphs
+
+    Confidence level timeline
+]
+This implementation provides a complete real-time cryptomining detection solution with statistical rigor, network adaptability, and enterprise-grade monitoring capabilities. The system can process >10,000 packets/second on commodity hardware while maintaining detection accuracy.
+"
+Iwant output like that as show in above
+
+### For Implementation required things listed below ###
+
+	- Make sure we have to perform code only two sample KS Test;
+	
+	- Code can be able to detect realtime traffic from network then after perform kstest on it after fetching required information without internal data fetch; {only access time interval and its varying range also pkt size}
+			python main.py [arguments for realtime detection with eth0, 1 or other] [comapred with prestored mininng data or pass mining pcap file] [showing live dashboard with in which ports]
+	
+	- Code can be perform kstest on predefined pcap trafic catured saved file; fetching required information without internal data fetch; {only access time interval and its varying range also pkt size}
+			python main.py [test for mining and how much pcap file] [comapred with prestored mininng data or pass mining pcap file] [showing live dashboard with in which ports]
+	
+	- During execution file we have to set or define all the arguments (if needed) as for capturing realtime detection;
+	
+	- Create buetifull dashboard and showing all description of detection and graphs as well;
+	
+	- Also another functionality add into it we provides two pcap file one mining based and another non mining (for test); or one mining another capture from networks realtime (for test and implements)
+	
+	- Also give me one more functionality first we provides to set and saved mining traffic configuration by giving mining pcaP FILES;
+	
+	- Also make sure one things also return in networks how much percentage detect and from which port and ip address;
+	- Also make sure one things user can use vpn for bypass network so detect those things aswell also user used some mining pools for mining, so noticed those things;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Please once again all the files and code in this project and link through main.py;
+
+and correct it according those references attched fle here and below listed instruction:
+1.  add option for calculating perfomance matrix we have to pass --normal_traffic <with path normal capturing file pcap or other> also for mining file --mining_traffic <file name with path> --> just for calculating performance matrix and thier all possible graphs with respect to predefined mining file or saved mining files;
+
+2. we have to calculated and show the graph of alpha according false positive rate and other performance matrix; ad choose best value of alpha for threshold;
+
+3. also calculate all possible paramenter m, n, (no of packets) for threshold and show in report or in dash board;
+
+4. give --help to show all possible arguments to run and how we run ewith details;
+
+5. we have to give live capturing as well as precaptiured file testing methodology on it;
+
+6. also make report in tabular format to well understands beginner and proffesionals;
+
+7. also show which connections are terrible (susspicious) and how much percentage full detailed report show also show in details in tabular formate or in json;
+
+8. Make it dashboard more advanced and attractive also show all possible to understrands workflow via dashboard also give option to choose which graph user wants to show;
+
+=============================================
+
+Please check this file and read all the instruction given in this file and give me one large project;
+
+Also for more information and reference use this  folder for guidance and how to implements
+
+=======================
+once again updates all the codes as per write instruction on file in this folder @References 
+
+and also show output in perfect formates on report json , tx, pdf like
+
+show all connections with ip and port as well also show percentage and confidence level of how accurate mining detect on it also show it is hypothesis rejected or accepted accroding kstest;
+Also show its normal or suspicious or mining detected specified by rnge;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Usage Example
+```bash
+# Live detection with connection tracking (Also we can use --mining-reference instead of --use-stored-reference)
+python main.py --live --interface eth0 --use-stored-reference --dashboard
+
+# PCAP analysis with detailed reporting (here also we use --use-stored-reference instead of --mining-reference) or also we can pass multiple files at same times
+python main.py --pcap suspicious.pcap --mining-reference mining.pcap --output-json report.json
+python main.py --pcap suspicious.pcap --mining-reference mining.pcap --output-pdf report.pdf
+python main.py --pcap suspicious.pcap --mining-reference mining.pcap --output-txt report.txt
+
+# for calculating paramenters or metrics like (fp, tn, tp, fn, accuracy, precision, recall, f1-score, roc_auc, auc)
+python main.py --normal-traffics normal_traffic.pcap --mining-reference mining.pcap --calculate-metrics --dashboard  (Show report and all possible graphs)
+python main.py --normal-traffics normal_traffic.pcap --mining-reference mining.pcap --calculate-metrics --output-pdf report.pdf  (save with all possible graphs and their description based on performance)
+python main.py --mining-traffics mining_traffic.pcap --mining-reference mining.pcap --calculate-metrics --dashboard  (Show report and all possible graphs)
+python main.py --mining-traffics mining_traffic.pcap --mining-reference mining.pcap --calculate-metrics --output-pdf report.pdf  (save with all possible graphs and their description based on performance)
+```
+
+This implementation now:
+1. Tracks individual connections with metadata
+2. Calculates detection percentages per connection
+3. Shows top suspicious connections in console and reports
+4. Maintains aggregate statistics while preserving per-connection details
+5. Visualizes connection data in the dashboard
+6. for live detection there is no size limits according connection varied parameter its ok;
+
+The code maintains the original KS test logic while adding connection-aware analysis capabilities.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+### Code Structure:
+Here we have to built one project base on Two sample KS test for mining (Cryptomining) Detection from networks (enterprise Networks);
+Here how we built this project and what are the modules we have to built are shown below:
+	- main file where all modules are linked and how we perform and what are steps we follow;
+	- traffic-capture file able to filter and capture live traffics like wireshrk and tcpdump and so on also take some arguments to get filter packets which is available in tcpdump or wireshark via arguments with main file;
+	- traffic-processing file which is able to filter traffic means read header file only and fetch time interval (itr or etr) from each of the flow or connectionalso fetch packet size in flow of each request, also fetch required data which needed in given paper (research paper);
+	- calculate-performance file this file able to calculate al the performance parameters (metrics) like TP, TN, FP, FN, etc..., calculate all metrics from the given data and testing 
+	- dashboard file contains (dashboard.py, index.html, style.css, script.js) which shown buetiful dashboard where shown all performance graphs and time seriese graph as well so user can easily understand how it works and what is their results;
+	- report file which build json file, pdf file, or other required to build report of all outputs with images and in tabular formats as well;
+	
+main.py -- all the parameter and linking files here
+packet_capture.py -- how packete capture and which protocols we are going to capture by user
+packet_prerocessing.py -- how we are going to process the captured packets fetching header details like:
+										- source ip
+										- destination ip
+										- source port
+										- destination port
+										- protocol
+										- packet length
+										- packet time
+										- packet sequence number
+										- time intervals between packets in a each flow or in each connection
+										- etc ...
+							: Also make change just fetch no sorting perform or no other extra functionality and preprocessing perform on it; please;
+							: Just do those things which are required for projects as per the given requirements;
+kstest.py -- KS test implementation; Implementation as per given algorithms no extra functionality added;just use it and make suitable for requirements
+dashboard.py -- how we are going to show the results in the dashboard
+					- dashboard/index.html
+					- dashboard/style.css
+					- dashboard/script.js
+					- dashboard/perfomance.html
+
+====================================================================================
+here how you calculate falsepositive and all other matric and all the files are comapred eith which files
+
+correct this code and all metrix and graph calculate on basis of compared and detectmining eith respect to other file mining refrence or saved mining file;
+
+compare firest normal traffic file and calculatre after mining file and calculate
+
+linked with main.py and also ahow dashboard all graphs of metrics and alpha vs fasle positive as well
+
+normal traffic file compare with stored premining file or mining-reference file and show result : mining detect in normal connection
+
+then mining traffic file compare same with stored premining file or mining-reference file and show result : nono mining detect on mining connection
+
+as per above instruction find correct solution and show all graphs
+
+like that :
+
+python main.py --normal-traffic <file-name with path> --mining-reference <file-name with path> [other paramenters like save output or dashboard etc ..]
+
+python main.py --mining-traffic <file-name with path> --mining-reference <file-name with path> [other paramenters like save output or dashboard etc ..]
+
+python main.py --normal-traffic <file-name with path> --use-stored-reference [other paramenters like save output or dashboard etc ..]
+
+python main.py --mining-traffic <file-name with path> --use-stored-reference [other paramenters like save output or dashboard etc ..] all above for performance mesure and metrics
+
+Also updates all the code and add comments of explanation of statements at the eng of the statements
+
+also dont use outlier detection for now and also dont use any other extra functionality for now just follow the given requirements and do

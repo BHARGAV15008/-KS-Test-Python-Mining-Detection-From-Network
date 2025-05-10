@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoMining Detection Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>CryptoMining Detection Dashboard</h1>
+        <div class="last-update">Last update: <span id="lastUpdate">Never</span></div>
+    </header>
+    
+    <div class="status-bar">
+        <div class="status" id="status">Status: Waiting for data...</div>
+        <div class="metrics">
+            <div class="metric">
+                <span class="metric-label">Confidence:</span>
+                <span class="metric-value" id="confidence">-</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">KS Statistic:</span>
+                <span class="metric-value" id="ksStatistic">-</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Threshold:</span>
+                <span class="metric-value" id="threshold">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dashboard-container">
+        <div class="dashboard-section">
+            <h2>Detection Timeline</h2>
+            <div class="chart-container">
+                <canvas id="timelineChart"></canvas>
+            </div>
+            <div class="timeline-table">
+                <table id="timelineTable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Confidence</th>
+                            <th>State</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">No timeline data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Suspicious Connections</h2>
+            <div class="connection-table">
+                <table id="connectionTable">
+                    <thead>
+                        <tr>
+                            <th>Source IP</th>
+                            <th>Destination IP</th>
+                            <th>Ports</th>
+                            <th>Protocol</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6">No suspicious connections detected</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Network Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card" id="packetRate">
+                    <div class="metric-title">Packet Rate</div>
+                    <div class="metric-value">0 pkt/s</div>
+                </div>
+                <div class="metric-card" id="latency">
+                    <div class="metric-title">Latency</div>
+                    <div class="metric-value">0 ms</div>
+                </div>
+                <div class="metric-card" id="jitter">
+                    <div class="metric-title">Jitter</div>
+                    <div class="metric-value">0 ms</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="networkMetricsChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Protocol Distribution</h2>
+            <div class="chart-container">
+                <canvas id="protocolChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>CDF Comparison</h2>
+            <div class="chart-container">
+                <canvas id="cdfChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script src="dashboard.js"></script>
+</body>
+</html>

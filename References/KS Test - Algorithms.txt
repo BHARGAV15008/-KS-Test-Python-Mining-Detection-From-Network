@@ -1,0 +1,25 @@
+************************************************** ONE WAY **************************************************
+1: Input: P, m, Q, G(x), n, k, α
+2: Output: 1 for cryptomining traffic, 0 for other traffic
+3: lP = inboundInterval(P)  # Inbound packet intervals extract karo
+4: lQ = inboundInterval(Q)  # Cryptomining packet intervals extract karo
+5: r = max(lQ) - min(lQ)  # Cryptomining distribution ka range nikalna
+6: initialize list ld  # Difference store karne ke liye ek list
+7: for i in range(k) do
+8:    x ← i * r/k + min(lQ)  # x point choose karo CDF comparison ke liye
+9:    l ← j such that j ∈ lP and j ≤ x  # Jo packets x se chhoti hain unko count karo
+10:   f ← l.size() / lP.size()  # ECDF ka fraction calculate karo
+11:   append | f - G(x) | to ld  # ECDFs ke beech ka difference list me store karo
+12:   if f == 1 then
+13:       break
+14:   end if
+15: end for
+16: Dm,n ← max(ld)  # Maximum difference nikalna
+17: if Dm,n ≤ - ln(α/2) * (1+m/n) / (2m) then
+18:    return 1  # Cryptomining detected
+19: else
+20:    return 0  # Normal traffic
+21: end if
+
+============================================================================================================
+************************************************ SECOND WAY ************************************************

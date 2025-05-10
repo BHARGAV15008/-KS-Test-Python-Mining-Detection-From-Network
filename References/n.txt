@@ -1,0 +1,62 @@
+Please once again all the files and code in this project and link through main.py;
+
+and correct it according those references attched fle here and below listed instruction:
+1.  add option for calculating perfomance matrix we have to pass --normal_traffic <with path normal capturing file pcap or other> also for mining file --mining_traffic <file name with path> --> just for calculating performance matrix and thier all possible graphs with respect to predefined mining file or saved mining files;
+
+2. we have to calculated and show the graph of alpha according false positive rate and other performance matrix; ad choose best value of alpha for threshold;
+
+3. also calculate all possible paramenter m, n, (no of packets) for threshold and show in report or in dash board;
+
+4. give --help to show all possible arguments to run and how we run ewith details;
+
+5. we have to give live capturing as well as precaptiured file testing methodology on it;
+
+6. also make report in tabular format to well understands beginner and proffesionals;
+
+7. also show which connections are terrible (susspicious) and how much percentage full detailed report show also show in details in tabular formate or in json;
+
+8. Make it dashboard more advanced and attractive also show all possible to understrands workflow via dashboard also give option to choose which graph user wants to show;
+
+=============================================
+
+Please check this file and read all the instruction given in this file and give me one large project;
+
+Also for more information and reference use this  folder for guidance and how to implements
+
+=======================
+once again updates all the codes as per write instruction on file in this folder @References 
+
+and also show output in perfect formates on report json , tx, pdf like
+
+show all connections with ip and port as well also show percentage and confidence level of how accurate mining detect on it also show it is hypothesis rejected or accepted accroding kstest;
+Also show its normal or suspicious or mining detected specified by rnge;
+Also add below in output:
+{
+  "timestamp": "2023-08-20T15:30:45.123456",
+  "window_size": 500,
+  "mining_stat": 0.043,
+  "nonmining_stat": 0.215,
+  "confidence": 0.891,
+  "threshold": 0.823,
+  "verdict": "MINING_DETECTED",
+  "network_metrics": {
+    "packet_rate": 1234.5,
+    "latency": 0.015,
+    "jitter": 0.002
+  }
+}
+
+Detection Timeline:
+
+Time          │ Confidence │ State           │ Action
+──────────────┼────────────┼─────────────────┼──────────────
+15:30:00      │ 0.12       │ Normal          │ Monitoring
+15:30:15      │ 0.65       │ Suspicious      │ Log event
+15:30:30      │ 0.89       │ Mining Detected │ Trigger alert
+15:30:45      │ 0.92       │ Mining Detected │ SMS notification
+
+
+also  add which protocols use;
+
+after all the connection description generates new report based on performance metrcis of entire networks 
+

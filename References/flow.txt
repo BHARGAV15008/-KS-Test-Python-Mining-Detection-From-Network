@@ -1,0 +1,10 @@
+Here we have to built one project base on Two sample KS test for mining (Cryptomining) Detection from networks (enterprise Networks);
+Here how we built this project and what are the modules we have to built are shown below:
+	- main file where all modules are linked and how we perform and what are steps we follow;
+	- traffic-capture file able to filter and capture live traffics like wireshrk and tcpdump and so on also take some arguments to get filter packets which is available in tcpdump or wireshark via arguments with main file;
+	- traffic-processing file which is able to filter traffic means read header file only and fetch time interval (itr or etr) from each of the flow or connectionalso fetch packet size in flow of each request, also fetch required data which needed in given paper (research paper);
+	- calculate-performance file this file able to calculate al the performance parameters (metrics) like TP, TN, FP, FN, etc...
+	- dashboard file contains (dashboard.py, index.html, style.css, script.js) which shown buetiful dashboard where shown all performance graphs and time seriese graph as well so user can easily understand how it works and what is their results;
+	- report file which build json file, pdf file, or other required to build report of all outputs with images and in tabular formats as well;
+	- ks-test here we have to implements two sample ks-test hypothesis algorithms a per given paper and algorithms explain in given text file;
+	- save-config file for future use we have to save mining files for future use so based on those files we mining detects in .cfg file save;

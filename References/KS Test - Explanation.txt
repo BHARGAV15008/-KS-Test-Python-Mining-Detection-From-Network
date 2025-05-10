@@ -1,0 +1,145 @@
+What is Kolmogorov-Smirnov (KS) Test?
+	- It's a statistical hypothesis test, which is comapare two hypothetical distribution;
+	- Also it's a non-parametric test;
+	- It's provides solution on basis of hypothesis and datasets, which gives given datasets are follow 
+	same distribution or not or how those both arevsimilar to each other;
+	- There is two types of KS Test:
+		1. One-Sample KS Test:
+			* In this case we have to check or compare our datasets with well known theoretical distribution
+			(such that normal and exponential distribution);
+		
+		2. Two-Sample KS Test:
+			* In this test we have to comapare two independent datasets;
+			* Here we have to check those two independent datasets are follows same distribution or not;
+			* This test we have to use for detection cryptomining from entire networks;
+			
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Explain KS Test Algorithms and How it Works.
+	- First of all from the networks we collect packet time interval of all packets which includes normal 
+	traffic and cryptomining traffic;
+	- Also we calculates range of time stamps of all packets;
+	- By using those calculation now we define and find the Cumulative Distribution Functions (CDFs)
+	or 	Empirical Cumulative Distribution Function (ECDFs);
+	- And we have to calculate those function of both datasets;
+	- After we that calculate maximaum difference of both dataset's cumulative functions differences;
+		* Let F(x) - 1st Dataset; G(x) - 2nd Dataset
+		i.e. Dmn = max|F(x) - G(x)|
+	- Now those Dmn difference compare with given threshold difference;
+		* Dmn <= Dmn,alpha (Threshold difference) - Then both distribution are diffrents;
+												  - Null Hypothesis Accepts
+		* Dmn > Dmn,alpha (Threshold difference)  - Then both are following same distribution and both have 
+		some similarities;
+												  - Null Hypothesis Rejected
+							
+	- Here we check two datasets, it means one is well known mining dataset and another we have to check it
+	is mining dataset or not;
+	- If hypothesis is reject then it's normal traffic; but when hypothesis accepts then it's mining traffics;
+	- But Threshold difference how to calculates? And what is alpha in it?
+		* Let's discussed one by one:
+			=> alpha means significance level, It's performs major role in calculating of threshold difference;
+			=> Small change value of alpha, perform major impact on threshold; most cases we consider alpha=.10;
+			=> alpha depends on many sensitivities and critical values;
+			=> High alpha increase false positives in CJSniffer;
+			
+			=> Calculation of threshold difference (Dmn,alpha): c(alpha).sqrt((m+n)/(m.n))  
+																	=>c(alpha)=sqrt(-ln(alpha/2)/2)
+															  : sqrt(-ln(alpha/2).[1+(m/n)]/(2.m))
+
+	--> Now let's undestands how it works:
+		*** Inputs & Outputs ***
+		-----------------------------------------------------------------------
+		* "Input: P, m, Q, G(x), n, k, α
+		   Output: 1 for cryptomining traffic, 0 for other traffic"
+		-----------------------------------------------------------------------
+			# P: Packet list which is tested by him (m no. of packets)
+			# Q: Known cryptomining packet list (n no. of packets)
+			# G(x): Q ka cumulative distribution function
+			# k: Granularity for calculating KS statistic (kitne points par comparison karna hai)
+			# α: Significance level
+			# Return 1 if traffic is cryptomining, 0 otherwise;
+			
+			
+		*** Interval Extraction ***
+		-----------------------------------------------------------------------
+		* "l_P = inboundInterval(P) 
+		   l_Q = inboundInterval(Q)"
+		-----------------------------------------------------------------------
+			# Extract inbound packet intervals from both P and Q lists;
+			# inboundInterval() function which is extract the time intervalfrom packet list;
+		
+		
+		*** Range Calculation ***
+		-----------------------------------------------------------------------
+		* "r = max(l_Q) - min(l_Q)"
+		-----------------------------------------------------------------------
+			# Calculate the range of G(x) - from maximum to minimum;		
+		
+		
+		*** CDF Comparison Loop ***
+		-----------------------------------------------------------------------
+		* "initialize list l_d
+		   for i in range(k) do
+				x ←− (i×r/k) + min(l_Q)"
+		-----------------------------------------------------------------------
+			# l_d list will store differences between two CDFs;
+			# Loop k times, dividing the range into k equal parts;
+			# x is the current point where we're comparing the CDFs;
+			
+		-----------------------------------------------------------------------
+		* "		l ←− {j | j ∈ l_P and j ≤ x}
+				f ←− l.size()/l_P.size()"
+		-----------------------------------------------------------------------
+			# l contains all elements in l_P that are less than or equal to x;
+			# f is the CDF value at point x for sample P (proportion of elements ≤ x);
+		
+		-----------------------------------------------------------------------
+		* "		append |f - G(x)| to l_d"
+		-----------------------------------------------------------------------
+			# Calculate and store the absolute difference between CDFs at point x;
+		
+		-----------------------------------------------------------------------
+		* "		if f == 1 then
+					break
+				end if
+			end for
+			D_m,n ←− max(l_d)"
+		-----------------------------------------------------------------------
+			# Optimization: if we've already included all elements of l_P, no need to continue;
+			# Find the maximum difference between the CDFs, which is our KS statistic;		
+	
+		
+		*** KS Statistic & Decision ***
+		-----------------------------------------------------------------------
+		* "if D_m,n ≤ √[(-ln(α/2)×(1+m/n))/(2m)] then
+				return 1 ▷ accept the hypothesis H_0
+		   else
+				return 0
+		   end if"
+		-----------------------------------------------------------------------
+
+			# If the KS statistic is less than or equal to the critical value, accept null hypothesis;
+			# This means the traffic matches the distribution of cryptomining traffic;
+			# Otherwise, reject null hypothesis - the traffic does not match cryptomining patterns;
+
+"""
+CJ-Sniffer Mein KS Test Implementation Ki Visheshta
+CJ-Sniffer mein KS test ka implementation kuch special features ke saath kiya gaya hai:
+
+Inbound vs Outbound Focus: System primarily inbound packet intervals par focus karta hai kyunki ye more robust indicators hote hain cryptomining ke liye.
+Pre-calculation: Known cryptomining traffic ka CDF pehle se calculate kiya jata hai for efficiency, taki har naye traffic ko analyze karte time sirf ek hi CDF calculate karna pade.
+Granularity Parameter: Algorithm mein 'k' parameter se control kiya jata hai ki kitne points par comparison hoga. Higher k means more accurate comparison but more computation.
+Early Termination: Agar CDF value 1 reach kar jati hai (line 12-14), to loop early terminate ho jata hai for optimization.
+Configurable Significance: α value (significance level) ko adjust karke false positive rate control kiya ja sakta hai. Higher α means stricter comparison.
+
+Real-world Implementation Mein Considerations
+CJ-Sniffer system mein KS test ke implementation ke liye kuch important considerations hain:
+
+Traffic Segmentation: System individual connections ko analyze karta hai rather than pooling all traffic together.
+Two-Phase Approach: Pehle phase mein suspicious connections identify hote hain, phir second phase mein KS test apply hota hai.
+Both Inbound & Outbound Analysis: Though algorithm mein sirf inbound intervals show kiye gaye hain, actual implementation mein system both inbound and outbound traffic ko analyze karta hai for better accuracy.
+Statistical vs Machine Learning Combination: KS test (statistical approach) combined with LSTM (machine learning) approach hai for comprehensive detection.
+
+Is tarah se, CJ-Sniffer system KS test ka smart use karke cryptomining traffic ko detect karta hai, especially cryptojacking attempts ko jo users ki knowledge ke bina unke resources use karte hain.
+"""
